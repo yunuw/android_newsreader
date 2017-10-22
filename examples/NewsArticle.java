@@ -1,3 +1,8 @@
+http://beta.newsapi.org/v2/top-headlines?sources=searchTerm&country=us&language=en&apiKey=9686280ead3e47d7b6820ba9644a1bb7
+
+http://beta.newsapi.org/v2/top-headlines?q=church&country=us&language=en&apiKey=9686280ead3e47d7b6820ba9644a1bb7
+
+
 import android.util.Log;
 
 import android.util.Log;
