@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,7 +55,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class NewsArticleListActivity extends AppCompatActivity {
+public class NewsArticleListActivity extends AppCompatActivity implements NewsArticleDetailFragment.UpdateDetailFragment{
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -147,7 +149,7 @@ public class NewsArticleListActivity extends AppCompatActivity {
 
     private void newsSearch(String searchTerm){
         String urlString = "http://beta.newsapi.org/v2/top-headlines?" + searchTerm
-                + "country=us" + "&language=en" + "&apiKey=9686280ead3e47d7b6820ba9644a1bb7";
+                + "country=us" + "&language=en" + "&apiKey=" + getResources().getString(R.string.api_key);
 
         Request request = new JsonObjectRequest(Request.Method.GET, urlString, null,
                 new Response.Listener<JSONObject>() {
@@ -161,6 +163,7 @@ public class NewsArticleListActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
                         String errorMsg = new String(error.networkResponse.data);
+                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 });
         RequestSingleton.getInstance(this).add(request);
@@ -168,6 +171,22 @@ public class NewsArticleListActivity extends AppCompatActivity {
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new NewsArticleAdapter(new ArrayList<NewsArticle>()));
+    }
+
+    @Override
+    public void updateFragment(NewsArticle article) {
+        if (mTwoPane) {
+            NewsArticleDetailFragment fragment = NewsArticleDetailFragment.newInstance(article);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.newsarticle_detail_container, fragment)
+                    .commit();
+
+        } else {
+            Intent intent = new Intent(this, NewsArticleDetailActivity.class);
+            intent.putExtra(NewsArticleDetailFragment.NEWS_PARCEL_KEY, article);
+
+            this.startActivity(intent);
+        }
     }
 
     public class NewsArticleAdapter
@@ -204,21 +223,7 @@ public class NewsArticleListActivity extends AppCompatActivity {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        arguments.putString(NewsArticleDetailFragment.ARG_ITEM_ID, holder.mItem.sourceId);
-                        NewsArticleDetailFragment fragment = new NewsArticleDetailFragment();
-                        fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.newsarticle_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = v.getContext();
-                        Intent intent = new Intent(context, NewsArticleDetailActivity.class);
-                        intent.putExtra(NewsArticleDetailFragment.ARG_ITEM_ID, holder.mItem.sourceId);
-
-                        context.startActivity(intent);
-                    }
+                    updateFragment(holder.mItem);
                 }
             });
         }

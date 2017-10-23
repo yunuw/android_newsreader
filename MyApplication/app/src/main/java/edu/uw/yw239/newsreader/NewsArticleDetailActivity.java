@@ -9,6 +9,10 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 /**
  * An activity representing a single NewsArticle detail screen. This
@@ -16,7 +20,10 @@ import android.view.MenuItem;
  * item details are presented side-by-side with a list of items
  * in a {@link NewsArticleListActivity}.
  */
-public class NewsArticleDetailActivity extends AppCompatActivity {
+public class NewsArticleDetailActivity extends AppCompatActivity
+        implements NewsArticleDetailFragment.HasCollapsableImage, NewsArticleDetailFragment.UpdateDetailFragment{
+
+    private NewsArticle currentArticle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +36,12 @@ public class NewsArticleDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, currentArticle.headline + "\n" + currentArticle.webUrl);
+                intent.setType("text/plain");
+
+                startActivity(intent);
             }
         });
 
@@ -52,14 +63,26 @@ public class NewsArticleDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(NewsArticleDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(NewsArticleDetailFragment.ARG_ITEM_ID));
-            NewsArticleDetailFragment fragment = new NewsArticleDetailFragment();
-            fragment.setArguments(arguments);
+            Intent intent= getIntent();
+            currentArticle = (NewsArticle) intent.getExtras().getParcelable(NewsArticleDetailFragment.NEWS_PARCEL_KEY);
+            NewsArticleDetailFragment fragment = NewsArticleDetailFragment.newInstance(currentArticle);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.newsarticle_detail_container, fragment)
                     .commit();
+        }
+    }
+
+
+    public void setUpToolbar(NewsArticle newsArticle){
+        String imageUrl = newsArticle.imageUrl;
+        ImageLoader imageLoader = RequestSingleton.getImageLoader();
+        NetworkImageView imageView = (NetworkImageView)findViewById(R.id.network_image_view);
+
+        if(imageUrl != null) {
+            imageView.setImageUrl(imageUrl, imageLoader);
+        }
+        else {
+           imageView.setImageResource(R.drawable.default_image);
         }
     }
 
@@ -77,5 +100,13 @@ public class NewsArticleDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void updateFragment(NewsArticle article) {
+        NewsArticleDetailFragment fragment = NewsArticleDetailFragment.newInstance(article);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.newsarticle_detail_container, fragment)
+                .commit();
     }
 }

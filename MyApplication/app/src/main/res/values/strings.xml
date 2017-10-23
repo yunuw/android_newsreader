@@ -2,4 +2,6 @@
     <string name="app_name">NewsReader</string>
     <string name="title_newsarticle_detail">NewsArticle Detail</string>
     <string name="search_hint">Enter key words</string>
+    <string name="news_source">Source: </string>
+    <string name="related_articles">Related articles: </string>
 </resources>

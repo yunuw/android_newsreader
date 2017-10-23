@@ -21,7 +21,15 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
+            app:toolbarId="@+id/toolbar"
+            app:title=" ">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/network_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_toolbar"
@@ -48,6 +56,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/newsarticle_detail_container"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat" />
+        android:src="@drawable/ic_share"/>
 
 </android.support.design.widget.CoordinatorLayout>

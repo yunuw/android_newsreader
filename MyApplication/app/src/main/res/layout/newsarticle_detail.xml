@@ -1,4 +1,4 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/newsarticle_detail"
     style="?android:attr/textAppearanceLarge"
@@ -6,4 +6,59 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:textIsSelectable="true"
-    tools:context="edu.uw.yw239.newsreader.NewsArticleDetailFragment" />
+    android:orientation="vertical"
+    tools:context="edu.uw.yw239.newsreader.NewsArticleDetailFragment">
+
+    <TextView
+        android:id="@+id/fragment_headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Material.Headline"
+        android:text="Headline"/>
+
+    <TextView
+        android:id="@+id/fragment_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+        android:text="description haklhfeqiufbeiubgfelubwabujdsbfjkbaf"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@android:style/TextAppearance.Material.SearchResult.Subtitle"
+            android:text="@string/news_source"/>
+
+        <TextView
+            android:id="@+id/fragment_news_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="3dp"
+            android:text="source"
+            android:textAppearance="@android:style/TextAppearance.Material.SearchResult.Subtitle"></TextView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/fragment_related_articles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@android:style/TextAppearance.Material.SearchResult.Subtitle"
+        android:text="@string/related_articles"/>
+
+
+    <ListView
+        android:id="@+id/list_of_related_articles"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        ></ListView>
+
+    </LinearLayout>
