@@ -178,6 +178,7 @@ public class NewsArticleListActivity extends AppCompatActivity implements NewsAr
         if (mTwoPane) {
             NewsArticleDetailFragment fragment = NewsArticleDetailFragment.newInstance(article);
             getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(null)
                     .replace(R.id.newsarticle_detail_container, fragment)
                     .commit();
 

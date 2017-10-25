@@ -68,6 +68,7 @@ public class NewsArticleDetailActivity extends AppCompatActivity
             NewsArticleDetailFragment fragment = NewsArticleDetailFragment.newInstance(currentArticle);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.newsarticle_detail_container, fragment)
+                    .addToBackStack(null)
                     .commit();
         }
     }
@@ -107,6 +108,7 @@ public class NewsArticleDetailActivity extends AppCompatActivity
         NewsArticleDetailFragment fragment = NewsArticleDetailFragment.newInstance(article);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.newsarticle_detail_container, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 }
