@@ -26,8 +26,7 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior=".ShowOnScrollBehavior"
-        >
+        app:layout_behavior=".ShowOnScrollBehavior">
 
         <include layout="@layout/newsarticle_list" />
     </FrameLayout>
@@ -39,8 +38,8 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:visibility="invisible"
-        android:clickable="true"
-        app:srcCompat="@drawable/ic_keyboard_arrow_up_black_24dp" />
+        android:clickable="true" />
 
 
 </android.support.design.widget.CoordinatorLayout>
+

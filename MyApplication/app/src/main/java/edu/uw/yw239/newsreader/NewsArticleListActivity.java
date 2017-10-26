@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +17,8 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.AttributeSet;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +42,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
 
 import edu.uw.yw239.newsreader.dummy.DummyContent;
 
@@ -61,6 +66,7 @@ public class NewsArticleListActivity extends AppCompatActivity implements NewsAr
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private NewsArticle currentArticle;
     private boolean mTwoPane;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -108,7 +114,27 @@ public class NewsArticleListActivity extends AppCompatActivity implements NewsAr
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
             mTwoPane = true;
+
+            SimpleFragment simpleFragment = new SimpleFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.newsarticle_detail_container, simpleFragment)
+                    .commit();
+
+            //set the icon for the FAB in for large-screen layouts
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_share_white_24dp, getTheme()));
+
+
+            CoordinatorLayout.LayoutParams params =
+                    (CoordinatorLayout.LayoutParams) findViewById(R.id.frameLayout).getLayoutParams();
+            params.setBehavior(new AppBarLayout.ScrollingViewBehavior());
+            fab.show();
+
+        }else {
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp, getTheme()));
+
         }
+
 
         newsArticleInfo = new ArrayList<NewsArticle>();
         // Create the adapter to convert the array to views
@@ -182,6 +208,20 @@ public class NewsArticleListActivity extends AppCompatActivity implements NewsAr
                     .replace(R.id.newsarticle_detail_container, fragment)
                     .commit();
 
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.show();
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, currentArticle.headline + "\n" + currentArticle.webUrl);
+                    intent.setType("text/plain");
+
+                    startActivity(intent);
+                }
+            });
+
         } else {
             Intent intent = new Intent(this, NewsArticleDetailActivity.class);
             intent.putExtra(NewsArticleDetailFragment.NEWS_PARCEL_KEY, article);
@@ -209,6 +249,7 @@ public class NewsArticleListActivity extends AppCompatActivity implements NewsAr
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
+            currentArticle = holder.mItem;
 
 
             String imageUrl = mValues.get(position).imageUrl;
@@ -224,7 +265,7 @@ public class NewsArticleListActivity extends AppCompatActivity implements NewsAr
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    updateFragment(holder.mItem);
+                    updateFragment(currentArticle);
                 }
             });
         }

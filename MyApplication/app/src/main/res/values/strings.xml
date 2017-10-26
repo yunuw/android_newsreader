@@ -4,4 +4,7 @@
     <string name="search_hint">Enter key words</string>
     <string name="news_source">Source: </string>
     <string name="related_articles">Related articles: </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="welcome_message">Welcome to News Reader! Thank the news API provider for providing free news.</string>
 </resources>
